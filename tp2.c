@@ -186,29 +186,28 @@ return i;
 
 unsigned binary_search(int* tab, unsigned count, int val, int (*cmp)(int a, int b))
 {
-unsigned low = 0;
-unsigned high = count - 1;
-
-	while (low < high)
-	{
- 		unsigned mid = ((low + high) / 2);
-		int midVal = tab[mid];
-		//printf("%i\n", midVal);
-		
-		if ((*cmp)(val, midVal) == 1)
-		{
-			//printf("%i\n", mid);
-			low = mid + 1;
-		}
-		else if ((*cmp)(midVal, val) == 1)
-		{
-		//	printf("%i\n", mid);
-			high = mid - 1;
-		}
-		else
-			return mid;
-	}
-return count;
+  int lower = 0;
+  int upper = count - 1;
+  int mid;
+  int compareRet;
+  
+  do {
+    mid = (upper + lower) / 2;
+    printf("%d\n", mid);
+    compareRet = (*cmp)(tab[mid], val);
+    // tab[mid] > val 
+    if (compareRet == 1) 
+    {
+      upper = mid - 1;
+    } else if (compareRet == -1) // tab[mid] < val
+    {
+      lower = mid + 1;
+    } else 
+    {
+      break;
+    }
+  } while (lower <= upper);
+  return (compareRet == -1) ? count : mid;
 }
 
 
@@ -265,10 +264,12 @@ print_int_array(stdout, a, asize);
 
   //print_int_array(stdout, a, asize);
   my_test(0);
+  #if 1
   my_test(6);
   my_test(8);
   my_test(41);
   my_test(42);		
+  #endif 
   return 0;
 }
 
