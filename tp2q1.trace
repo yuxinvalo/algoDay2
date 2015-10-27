@@ -1,0 +1,9 @@
+tp2q1
+0
+3126983
+2015-10-27 17:39:19
+linear_search(..., 0, ..., ...) == 0
+initializing a[131071] = { ... }
+set b[] of values to lookup
+resulting indices in a[]
+number of comparisons in each case
