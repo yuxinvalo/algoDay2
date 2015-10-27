@@ -231,6 +231,7 @@ return i;
 
 unsigned binary_search(int* tab, unsigned count, int val, int (*cmp)(int a, int b))
 {
+<<<<<<< HEAD
 unsigned low = 0;
 unsigned high = count - 1;
 unsigned mid;
@@ -254,6 +255,30 @@ unsigned mid;
 	return mid;
 	}
 return low;
+=======
+  int lower = 0;
+  int upper = count - 1;
+  int mid;
+  int compareRet;
+  
+  do {
+    mid = (upper + lower) / 2;
+    printf("%d\n", mid);
+    compareRet = (*cmp)(tab[mid], val);
+    // tab[mid] > val 
+    if (compareRet == 1) 
+    {
+      upper = mid - 1;
+    } else if (compareRet == -1) // tab[mid] < val
+    {
+      lower = mid + 1;
+    } else 
+    {
+      break;
+    }
+  } while (lower <= upper);
+  return (compareRet == -1) ? count : mid;
+>>>>>>> 6a07b6d43d883abf47c02793b12316be8293b691
 }
 
 void bs_insert_sort_cmp(int *tab, unsigned count, int (*cmp)(int a, int b))
@@ -319,10 +344,12 @@ print_int_array(stdout, a, asize);
 
   print_int_array(stdout, a, asize);
   my_test(0);
+  #if 1
   my_test(6);
   my_test(8);
   my_test(41);
   my_test(42);		
+  #endif 
   return 0;
 }
 
