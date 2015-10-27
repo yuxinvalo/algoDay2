@@ -189,11 +189,11 @@ unsigned binary_search(int* tab, unsigned count, int val, int (*cmp)(int a, int 
 unsigned low = 0;
 unsigned high = count - 1;
 
-	while (low <= high)
+	while (low < high)
 	{
- 		unsigned mid = low + ((low + high) / 2);
+ 		unsigned mid = ((low + high) / 2);
 		int midVal = tab[mid];
-		printf("%i\n", midVal);
+		//printf("%i\n", midVal);
 		
 		if ((*cmp)(val, midVal) == 1)
 		{
