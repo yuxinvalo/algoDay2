@@ -2,7 +2,10 @@
 #include <math.h>
 #include <stdlib.h>
 # define MAX_COLUMN 80
-unsigned cmp_count;
+#include <stdint.h>
+
+unsigned int cmp_count;
+
 
 
 unsigned int_width(double i)
@@ -65,6 +68,8 @@ return -1;
 }
 
 //----------------print_int_array----------------------------------------
+#if 0  
+ne marche pas !!!!!
 void print_int_array(FILE* out, const int* tab, unsigned count)
 {
 int column = 0;
@@ -110,8 +115,48 @@ int j;
   }
 printf("\n");
 }
+#endif
 
-//---------------------------------------------------------------------------
+void printWhiteSpace(FILE* out, unsigned int count)
+{
+  for (unsigned int i = 0; i < count ; ++i)
+  {
+    fprintf(out, " ");
+  }
+}
+
+void printOneInt(FILE*out, const int num, const unsigned int int_width, const unsigned int max_width)
+{
+  printWhiteSpace(out, max_width - int_width);
+  fprintf(out, "%d", num);
+}
+
+void print_int_array(FILE* out, const int* tab, unsigned count)
+{
+  unsigned int max_width = ints_width(tab, count);
+ // unsigned int leadingIndex = 0;
+  unsigned int numOfIntsInTheRow;
+  unsigned int indexWidth = int_width(count - 1);
+for (unsigned int i = 0; i < count;)
+  {
+    numOfIntsInTheRow = (MAX_COLUMN - int_width(count - 1) - 2) / (max_width + 1);
+    printWhiteSpace(out, indexWidth - int_width(i));
+    fprintf(out, "[");
+    fprintf(out, "%d", i);
+    fprintf(out, "]");
+    for (unsigned int j = i; j < i + numOfIntsInTheRow && j < count; ++j)
+    {
+      fprintf(out, " ");
+      printOneInt(out, tab[j], int_width(tab[j]), max_width);
+    }
+    fprintf(out, "\n");
+    i += numOfIntsInTheRow;
+  }
+}
+
+
+
+//------------------------------------------------------------------------
 
 void insert_sort(int* tab, unsigned count)
 {
@@ -188,37 +233,46 @@ unsigned binary_search(int* tab, unsigned count, int val, int (*cmp)(int a, int 
 {
 unsigned low = 0;
 unsigned high = count - 1;
-
+unsigned mid;
+	if(sizeof(tab) == 0)
+	{
+		return count;
+	}
 	while (low < high)
 	{
- 		unsigned mid = ((low + high) / 2);
+ 		mid = (low + high) / 2;
 		int midVal = tab[mid];
-		//printf("%i\n", midVal);
-		
-		if ((*cmp)(val, midVal) == 1)
+	//increacing return -1	
+		if ((*cmp)(midVal, val) == -1)
 		{
-			//printf("%i\n", mid);
 			low = mid + 1;
 		}
-		else if ((*cmp)(midVal, val) == 1)
+		else if ((*cmp)(val, midVal) == -1)
 		{
-		//	printf("%i\n", mid);
 			high = mid - 1;
 		}
-		else
-			return mid;
+	return mid;
 	}
-return count;
+return low;
 }
 
-
-
+void bs_insert_sort_cmp(int *tab, unsigned count, int (*cmp)(int a, int b))
+{
+	
+}
 #define my_test(val) \
   cmp_count = 0; \
   printf("binary_search(a, %u, %d, increasing) = %u\n", \
          asize, (val), binary_search(a, asize, (val), increasing)); \
   printf("\twith %u comparisons\n", cmp_count);
 
+/*
+#define my_test(val) \
+  cmp_count = 0; \
+  printf("binary_search(a, %u, %d, increasing) = %u\n", \
+         asize, (val), binary_search(a, asize, (val), increasing)); \
+  printf("\twith %u comparisons\n", cmp_count);
+*/
 int main (void)
 {
 #if 0
@@ -263,7 +317,7 @@ print_int_array(stdout, a, asize);
   unsigned asize = sizeof(a) / sizeof(*a);
   puts("a[]:");
 
-  //print_int_array(stdout, a, asize);
+  print_int_array(stdout, a, asize);
   my_test(0);
   my_test(6);
   my_test(8);
