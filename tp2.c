@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>
 # define MAX_COLUMN 80
 #include <stdint.h>
-
-unsigned int cmp_count;
+#include <assert.h>
+#include <time.h>
+#include <string.h>
+unsigned cmp_count;
 
 
 
@@ -231,7 +232,7 @@ return i;
 
 unsigned binary_search(int* tab, unsigned count, int val, int (*cmp)(int a, int b))
 {
-<<<<<<< HEAD
+/*
 unsigned low = 0;
 unsigned high = count - 1;
 unsigned mid;
@@ -243,19 +244,20 @@ unsigned mid;
 	{
  		mid = (low + high) / 2;
 		int midVal = tab[mid];
-	//increacing return -1	
+  	//increacing return -1	
 		if ((*cmp)(midVal, val) == -1)
 		{
 			low = mid + 1;
 		}
 		else if ((*cmp)(val, midVal) == -1)
 		{
-			high = mid - 1;
+			high = mid;
 		}
 	return mid;
 	}
 return low;
-=======
+*/
+
   int lower = 0;
   int upper = count - 1;
   int mid;
@@ -263,7 +265,7 @@ return low;
   
   do {
     mid = (upper + lower) / 2;
-    printf("%d\n", mid);
+//    printf("%d\n", mid);
     compareRet = (*cmp)(tab[mid], val);
     // tab[mid] > val 
     if (compareRet == 1) 
@@ -277,27 +279,34 @@ return low;
       break;
     }
   } while (lower <= upper);
-  return (compareRet == -1) ? count : mid;
->>>>>>> 6a07b6d43d883abf47c02793b12316be8293b691
+  return (compareRet == -1) ? count : lower;
 }
+
+
 
 void bs_insert_sort_cmp(int *tab, unsigned count, int (*cmp)(int a, int b))
 {
-	
+int i, j, temp=0;
+unsigned bysr = 0;
+	for(i = 1; i < count; i++)
+	{
+		bysr = binary_search(tab, count, tab[i], cmp);
+		temp = tab[i];
+		for(j = i - 1; j >= bysr; j--)
+		{
+			tab[j + 1] = tab[j];
+		}
+	tab[bysr] = temp;
+	}	
 }
+
+
 #define my_test(val) \
   cmp_count = 0; \
   printf("binary_search(a, %u, %d, increasing) = %u\n", \
          asize, (val), binary_search(a, asize, (val), increasing)); \
   printf("\twith %u comparisons\n", cmp_count);
 
-/*
-#define my_test(val) \
-  cmp_count = 0; \
-  printf("binary_search(a, %u, %d, increasing) = %u\n", \
-         asize, (val), binary_search(a, asize, (val), increasing)); \
-  printf("\twith %u comparisons\n", cmp_count);
-*/
 int main (void)
 {
 #if 0
@@ -323,20 +332,9 @@ print_int_array(stdout, a, 10);
 puts("\n-- a[0..10]");
 print_int_array(stdout, a, 11);
 
-
-#if 0
-int a[] = {
-  1, 2, 3, 4, 5, 6, 13, -35, 129, -4, 123, -4555, 1341, 2432, 111, 0, 1230
-};
-
-unsigned asize = sizeof(a)/sizeof(*a);
-puts("before");
-print_int_array(stdout, a, asize);
-insert_sort(a, asize);
-puts("after");
-print_int_array(stdout, a, asize);
 #endif
-#endif
+
+
 
   int a[] = { 1, 2, 3, 4, 5, 6, 9, 12, 15, 20, 25, 35, 38, 40, 41 };
   unsigned asize = sizeof(a) / sizeof(*a);
@@ -350,6 +348,33 @@ print_int_array(stdout, a, asize);
   my_test(41);
   my_test(42);		
   #endif 
-  return 0;
+
+
+/*
+	srand(0);
+   const unsigned tsize = 50000;
+   int tab1[tsize];
+   int tab2[tsize];
+   for (unsigned i = 0; i < tsize; ++i)
+     tab1[i] = tab2[i] = rand();
+
+   cmp_count = 0;
+   clock_t before = clock();
+   insert_sort_cmp(tab1, tsize, increasing);
+   clock_t after = clock();
+   printf("insertion_sort_cmp() took %zu comparisons and %ju ticks\n",
+          cmp_count, (uintmax_t)(after - before));
+
+   cmp_count = 0;
+   before = clock();
+   bs_insert_sort_cmp(tab2, tsize, increasing);
+   after = clock();
+   printf("bs_insertion_sort_cmp() took %zu comparisons and %ju ticks\n",
+          cmp_count, (uintmax_t)(after - before));
+
+   // The two arrays should of course be equal.
+   assert(memcmp(tab1, tab2, sizeof(tab1)) == 0);*/
+   return 0;
+ // return 0;
 }
 
